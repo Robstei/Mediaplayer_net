@@ -37,6 +37,7 @@ public class Controller implements EventHandler<ActionEvent> {
 
             allSongs =FXCollections.observableArrayList();
             playlist =FXCollections.observableArrayList();
+            fileChooser = new FileChooser();
             this.model = model;
             this.view = view;
             view.add_playlist.setOnAction(this);
@@ -50,25 +51,25 @@ public class Controller implements EventHandler<ActionEvent> {
             view.pause.setOnAction(this);
             view.loadb.setOnAction(this);
 
-            Song aq = (Song) view.playlistlv.getSelectionModel().getSelectedItem();
-            if (aq != null) {
-                aq.albumProperty().bindBidirectional(view.albumtf.textProperty());
-            }
-
             view.playlistlv.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                System.out.println(observable);
-                System.out.println(oldValue);
-                System.out.println(newValue);
                 if (oldValue != null) {
                     ((Song) oldValue).albumProperty().unbindBidirectional(view.albumtf.textProperty());
+                    ((Song) oldValue).interpretProperty().unbindBidirectional(view.interprettf.textProperty());
                 }
                 view.albumtf.setText(((Song) newValue).albumProperty().get());
                 ((Song) newValue).albumProperty().bindBidirectional(view.albumtf.textProperty());
+
+                view.interprettf.setText(((Song) newValue).interpretProperty().get());
+                ((Song) newValue).interpretProperty().bindBidirectional(view.interprettf.textProperty());
+
+                view.titeltf.setText((newValue).getTitle());
             });
 
-            fileChooser = new FileChooser();
 
-            view.songslv.setItems(allSongs);
+
+
+
+
 
             Callback<ListView<interfaces.Song>, ListCell<interfaces.Song>> c = new Callback <ListView<interfaces.Song>, ListCell<interfaces.Song>>() {
                 @Override
@@ -86,6 +87,7 @@ public class Controller implements EventHandler<ActionEvent> {
                     return cell;
                 }
             };
+            view.songslv.setItems(allSongs);
             view.songslv.setCellFactory(c);
 
 
@@ -118,11 +120,11 @@ public class Controller implements EventHandler<ActionEvent> {
                     playlist.add(allSongs.get(0));
                 }
             } else  if(event.getSource() == view.play){
-                System.out.println(view.playlistlv.getSelectionModel().getSelectedItem());
                 if(mp == null) {
                     music = new Media(view.playlistlv.getItems().get(0).getPath());
                     mp = new MediaPlayer(music);
                     mp.setVolume(0.05);
+
                 }
                 mp.play();
             } else  if(event.getSource() == view.pause){

@@ -30,22 +30,22 @@ public class View extends BorderPane {
     VBox right;
     Button add_playlist;
 
-    // initializing the left side
+    // declaring the left side
     VBox left;
     ListView<interfaces.Song> songslv;
 
-    // initializing the center
+    // declaring the center
     VBox center;
     ListView<interfaces.Song> playlistlv;
 
-    // initializing the top
+    // declaring the top
     HBox top;
     Button loadb;
     Button saveb;
     Label timel;
     ComboBox cb;
 
-    // initializing the buttom
+    // declaring the buttom
     Button addAllb;
     HBox bottom;
 
@@ -73,7 +73,7 @@ public class View extends BorderPane {
         right.getChildren().addAll(titell, titeltf, interpretl, interprettf, albuml, albumtf, right_middle, add_playlist);
 
 
-        playlistlv = new ListView<interfaces.Song>();
+        playlistlv = new ListView<>();
 
 
         center = new VBox();
@@ -98,7 +98,7 @@ public class View extends BorderPane {
         top.setPadding(new Insets(3));
         top.getChildren().addAll(cb, loadb, saveb, timel);
 
-        songslv = new ListView<interfaces.Song>();
+        songslv = new ListView<>();
 
         left = new VBox();
         left.setPadding(new Insets(3));
