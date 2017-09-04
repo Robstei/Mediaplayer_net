@@ -1,6 +1,4 @@
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,7 +12,6 @@ import javafx.util.Callback;
 
 import java.io.File;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -38,7 +35,6 @@ public class Controller implements EventHandler<ActionEvent> {
 
         public void link(Model model, View view) throws RemoteException {
 
-            i=0;
             allSongs =FXCollections.observableArrayList();
             playlist =FXCollections.observableArrayList();
             this.model = model;
@@ -53,6 +49,22 @@ public class Controller implements EventHandler<ActionEvent> {
             view.play.setOnAction(this);
             view.pause.setOnAction(this);
             view.loadb.setOnAction(this);
+
+            Song aq = (Song) view.playlistlv.getSelectionModel().getSelectedItem();
+            if (aq != null) {
+                aq.albumProperty().bindBidirectional(view.albumtf.textProperty());
+            }
+
+            view.playlistlv.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                System.out.println(observable);
+                System.out.println(oldValue);
+                System.out.println(newValue);
+                if (oldValue != null) {
+                    ((Song) oldValue).albumProperty().unbindBidirectional(view.albumtf.textProperty());
+                }
+                view.albumtf.setText(((Song) newValue).albumProperty().get());
+                ((Song) newValue).albumProperty().bindBidirectional(view.albumtf.textProperty());
+            });
 
             fileChooser = new FileChooser();
 
@@ -93,27 +105,21 @@ public class Controller implements EventHandler<ActionEvent> {
                     return lc;
                 }
             };
-
             view.playlistlv.setItems(playlist);
             view.playlistlv.setCellFactory(plcallback);
         }
 
     @Override
     public void handle(ActionEvent event) {
-            if(event.getSource() == view.add_playlist ){
+            if(event.getSource() == view.add_playlist && allSongs.size() > 0){
                 if(view.songslv.getSelectionModel().getSelectedItem() != null) {
                     playlist.add(view.songslv.getSelectionModel().getSelectedItem());
                 } else if(view.songslv.getItems().get(0) != null){
                     playlist.add(allSongs.get(0));
                 }
             } else  if(event.getSource() == view.play){
+                System.out.println(view.playlistlv.getSelectionModel().getSelectedItem());
                 if(mp == null) {
-
-
-
-
-
-
                     music = new Media(view.playlistlv.getItems().get(0).getPath());
                     mp = new MediaPlayer(music);
                     mp.setVolume(0.05);
@@ -123,8 +129,8 @@ public class Controller implements EventHandler<ActionEvent> {
                 mp.pause();
             } else  if(event.getSource() == view.loadb) {
                 List<File> list = fileChooser.showOpenMultipleDialog(new Stage());
-                System.out.println(list.size());
-                for (File file : list) {
+                if(list != null) {
+                    for (File file : list) {
                         Song song = new Song(file.toURI().toString(),file.getName(),"","");
                         try {
                             model.allSongs.addSong(song);
@@ -133,6 +139,7 @@ public class Controller implements EventHandler<ActionEvent> {
                             e.printStackTrace();
                         }
                     }
+                }
             }
         }
 }

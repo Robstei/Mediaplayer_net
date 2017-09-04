@@ -1,28 +1,29 @@
-
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+import interfaces.Song;
 import javafx.collections.ModifiableObservableListBase;
 
-public class SongList extends ModifiableObservableListBase<interfaces.Song> implements interfaces.SongList {
+public class SongList extends ModifiableObservableListBase<Song> implements interfaces.SongList {
 
-    private ArrayList<interfaces.Song> songList = new ArrayList<interfaces.Song>();
+    private ArrayList<Song> songList = new ArrayList<>();
 
-    @Override
+
     public boolean addSong(interfaces.Song s) throws RemoteException {
         songList.add(s);
+        s.setId(getList().size());
         return true;
     }
 
     @Override
     public boolean deleteSong(interfaces.Song s) throws RemoteException {
-        return false;
+        songList.remove(s.getId());
+        return true;
     }
 
     @Override
     public void setList(ArrayList<interfaces.Song> s) throws RemoteException {
-
+        this.songList = s;
     }
 
     @Override
@@ -37,36 +38,70 @@ public class SongList extends ModifiableObservableListBase<interfaces.Song> impl
 
     @Override
     public int sizeOfList() throws RemoteException {
-        return 0;
+        return getList().size();
     }
 
     @Override
     public Song findSongByPath(String name) throws RemoteException {
+        for(int i = 0; i < sizeOfList(); i++){
+            if(getList().get(i).getPath().equals(name)){
+                return getList().get(i);
+            }
+        }
         return null;
     }
 
     @Override
     public Song get(int index) {
-        return null;
+        return get(index);
     }
 
     @Override
     public int size() {
+        try {
+            return getList().size();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
     @Override
     protected Song doRemove(int index) {
+        try {
+            getList().remove(index);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        try {
+            return getList().get(index);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
-    protected Song doSet(int index, interfaces.Song element) {
+    protected Song doSet(int index, Song element) {
+        try {
+            getList().set(index, element);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        try {
+            return getList().get(index);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
-    protected void doAdd(int index, interfaces.Song element) {
-
+    protected void doAdd(int index, Song element) {
+        try {
+            getList().add(index, element);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }

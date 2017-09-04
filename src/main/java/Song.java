@@ -2,11 +2,11 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class Song implements interfaces.Song {
 
-    SimpleStringProperty path = new SimpleStringProperty();
-    SimpleStringProperty titel = new SimpleStringProperty();
-    SimpleStringProperty album = new SimpleStringProperty();
-    SimpleStringProperty interpret = new SimpleStringProperty();
-    long id;
+    private SimpleStringProperty path = new SimpleStringProperty();
+    private SimpleStringProperty titel = new SimpleStringProperty();
+    private SimpleStringProperty album = new SimpleStringProperty();
+    private SimpleStringProperty interpret = new SimpleStringProperty();
+    private long id;
 
     public Song(String p,String t,String a,String i){
         this.setPath(p);
