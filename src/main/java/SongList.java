@@ -1,6 +1,5 @@
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-
 import interfaces.Song;
 import javafx.collections.ModifiableObservableListBase;
 
@@ -11,7 +10,6 @@ public class SongList extends ModifiableObservableListBase<Song> implements inte
 
     public boolean addSong(interfaces.Song s) throws RemoteException {
         songList.add(s);
-        s.setId(getList().size());
         return true;
     }
 
@@ -33,7 +31,7 @@ public class SongList extends ModifiableObservableListBase<Song> implements inte
 
     @Override
     public void deleteAllSongs() throws RemoteException {
-
+        songList = new ArrayList<>();
     }
 
     @Override
@@ -53,7 +51,7 @@ public class SongList extends ModifiableObservableListBase<Song> implements inte
 
     @Override
     public Song get(int index) {
-        return get(index);
+        return songList.get(index);
     }
 
     @Override

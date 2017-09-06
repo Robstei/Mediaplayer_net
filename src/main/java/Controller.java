@@ -1,4 +1,5 @@
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,10 +20,10 @@ public class Controller implements EventHandler<ActionEvent> {
 
     private Model model;
     private View view;
+    String time;
     Media music;
     MediaPlayer mp;
     FileChooser fileChooser;
-    int i;
     ObservableList<interfaces.Song> allSongs;
     ObservableList<interfaces.Song> playlist;
 
@@ -35,9 +36,10 @@ public class Controller implements EventHandler<ActionEvent> {
 
         public void link(Model model, View view) throws RemoteException {
 
-            allSongs =FXCollections.observableArrayList();
-            playlist =FXCollections.observableArrayList();
             fileChooser = new FileChooser();
+            FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(
+                    "MP3 Files (*.mp3)", "*.mp3");
+            fileChooser.getExtensionFilters().add(extensionFilter);
             this.model = model;
             this.view = view;
             view.add_playlist.setOnAction(this);
@@ -50,6 +52,9 @@ public class Controller implements EventHandler<ActionEvent> {
             view.play.setOnAction(this);
             view.pause.setOnAction(this);
             view.loadb.setOnAction(this);
+            view.addAllb.setOnAction(this);
+            view.next.setOnAction(this);
+            view.saveb.setOnAction(this);
 
             view.playlistlv.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (oldValue != null) {
@@ -64,12 +69,6 @@ public class Controller implements EventHandler<ActionEvent> {
 
                 view.titeltf.setText((newValue).getTitle());
             });
-
-
-
-
-
-
 
             Callback<ListView<interfaces.Song>, ListCell<interfaces.Song>> c = new Callback <ListView<interfaces.Song>, ListCell<interfaces.Song>>() {
                 @Override
@@ -87,8 +86,22 @@ public class Controller implements EventHandler<ActionEvent> {
                     return cell;
                 }
             };
+            allSongs = FXCollections.observableArrayList(model.getAllSongs().getList());
+            allSongs.addListener((ListChangeListener<interfaces.Song>) c1 -> {
+
+                while (c1.next()) {
+                    if (c1.wasAdded()) {
+                        for (int i = c1.getFrom(); i < c1.getTo(); ++i) {
+                            model.getAllSongs().add(c1.getList().get(i));
+
+                        }
+                    }
+                }
+            });
+
             view.songslv.setItems(allSongs);
             view.songslv.setCellFactory(c);
+
 
 
             Callback<ListView<interfaces.Song>, ListCell<interfaces.Song>> plcallback = new Callback<ListView<interfaces.Song>, ListCell<interfaces.Song>>() {
@@ -107,40 +120,85 @@ public class Controller implements EventHandler<ActionEvent> {
                     return lc;
                 }
             };
-            view.playlistlv.setItems(playlist);
+            view.playlistlv.setItems(model.getPlaylist());
             view.playlistlv.setCellFactory(plcallback);
+
         }
 
-    @Override
+
+
+
+
+
+        @Override
     public void handle(ActionEvent event) {
-            if(event.getSource() == view.add_playlist && allSongs.size() > 0){
-                if(view.songslv.getSelectionModel().getSelectedItem() != null) {
-                    playlist.add(view.songslv.getSelectionModel().getSelectedItem());
-                } else if(view.songslv.getItems().get(0) != null){
-                    playlist.add(allSongs.get(0));
-                }
-            } else  if(event.getSource() == view.play){
-                if(mp == null) {
+        if (event.getSource() == view.add_playlist && model.getAllSongs().size() > 0) {
+            if (view.songslv.getSelectionModel().getSelectedItem() != null) {
+                model.getPlaylist().add(view.songslv.getSelectionModel().getSelectedItem());
+            } else if (view.songslv.getItems().get(0) != null) {
+                model.getPlaylist().add(model.getAllSongs().get(0));
+            }
+        } else if (event.getSource() == view.play) {
+            if (view.playlistlv.getItems().get(0) != null) {
+                if (mp == null) {
                     music = new Media(view.playlistlv.getItems().get(0).getPath());
                     mp = new MediaPlayer(music);
-                    mp.setVolume(0.05);
-
-                }
-                mp.play();
-            } else  if(event.getSource() == view.pause){
-                mp.pause();
-            } else  if(event.getSource() == view.loadb) {
-                List<File> list = fileChooser.showOpenMultipleDialog(new Stage());
-                if(list != null) {
-                    for (File file : list) {
-                        Song song = new Song(file.toURI().toString(),file.getName(),"","");
+                    mp.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+                        time = String.format("%02d:%02d", (long) newValue.toMinutes(), ((long) newValue.toSeconds()) % 60);
+                        view.timel.setText(time);
+                    });
+                    mp.setOnEndOfMedia(() -> {
                         try {
-                            model.allSongs.addSong(song);
-                            allSongs.add(song);
+                            for (int i = 0; i < model.getPlaylist().sizeOfList() - 1; i++) {
+                                if (model.getPlaylist().get(i).getPath().equals(music.getSource())) {
+                                    music = new Media(view.playlistlv.getItems().get(i + 1).getPath());
+                                    mp = new MediaPlayer(music);
+                                    mp.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+                                        time = String.format("%02d:%02d", (long) newValue.toMinutes(), ((long) newValue.toSeconds()) % 60);
+                                        view.timel.setText(time);
+                                    });
+                                    mp.setVolume(0.05);
+                                    mp.play();
+                                    break;
+                                }
+                            }
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
+                    });
+                    mp.setVolume(0.05);
+                    if (mp.getStatus() != MediaPlayer.Status.PLAYING) {
+                        mp.play();
                     }
+                }
+            }
+        } else if (event.getSource() == view.pause) {
+            mp.pause();
+        } else if (event.getSource() == view.loadb) {
+            List<File> list = fileChooser.showOpenMultipleDialog(new Stage());
+            if (list != null) {
+                for (File file : list) {
+                    Song song = new Song(file.toURI().toString(), file.getName(), "", "");
+                    allSongs.add(song);
+                }
+            }
+        } else if(event.getSource() == view.saveb) {
+
+        } else if (event.getSource() == view.addAllb) {
+                model.getPlaylist().addAll(model.getAllSongs());
+        } else if (event.getSource() == view.next) {
+                try {
+                    for (int i = 0; i < model.getPlaylist().sizeOfList() -1; i++) {
+                        if (model.getPlaylist().get(i).getPath().equals(music.getSource())) {
+                            mp.stop();
+                            music = new Media(view.playlistlv.getItems().get(i + 1).getPath());
+                            mp = new MediaPlayer(music);
+                            mp.play();
+
+                        }
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
                 }
             }
         }

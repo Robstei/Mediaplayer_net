@@ -2,9 +2,9 @@ import javafx.stage.Stage;
 
 
 public class Model {
-    private Stage primaryStage = null;
-    SongList playlist = new SongList();
-    SongList allSongs = new SongList();
+    private Stage primaryStage = new Stage();
+    private SongList playlist = new SongList();
+    private SongList allSongs = new SongList();
 
     public SongList getPlaylist() {
         return playlist;
