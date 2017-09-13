@@ -1,4 +1,6 @@
+import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,10 +14,15 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
 
 public class View extends BorderPane {
 
-    // initializing the right side
+    // declaring the right side
     Label titell;
     TextField titeltf;
     Label interpretl;
@@ -93,6 +100,9 @@ public class View extends BorderPane {
         timel = new Label("0:00");
         cb = new ComboBox();
         cb.setPrefWidth(200);
+        ObservableList<String> serializingWay = FXCollections.observableArrayList(
+                "Binär", "2", "3", "4" );
+        cb.setItems(serializingWay);
         top = new HBox();
         top.setSpacing(10);
         top.setPadding(new Insets(3));

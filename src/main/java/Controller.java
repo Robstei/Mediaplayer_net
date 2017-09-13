@@ -9,18 +9,21 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
 
 
 public class Controller implements EventHandler<ActionEvent> {
 
+    Song s;
     private Model model;
     private View view;
     private String time;
     private Media music;
     private MediaPlayer mp;
     private FileChooser fileChooser;
+    private BinaryStrategy bs;
 
 
     //Verbidung zwischen den Daten im Model und der Liste in der View.
@@ -30,6 +33,9 @@ public class Controller implements EventHandler<ActionEvent> {
     //kann hier elegant mit Lambda-Ausdrüken gearbeitet werden.
 
     public void link(Model model, View view) throws RemoteException {
+
+        bs = new BinaryStrategy();
+        s = new Song("AA","B","C","D");
 
         fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(
@@ -136,7 +142,7 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
     @Override
-    public void handle(ActionEvent event) {
+    public void handle(ActionEvent event)  {
         if (event.getSource() == view.add_playlist && model.getAllSongs().size() > 0) {
             if (view.songslv.getSelectionModel().getSelectedItem() != null) {
                 model.getPlaylist().add(view.songslv.getSelectionModel().getSelectedItem());
@@ -154,18 +160,56 @@ public class Controller implements EventHandler<ActionEvent> {
         } else if (event.getSource() == view.pause) {
             mp.pause();
         } else if (event.getSource() == view.loadb) {
-            List<File> list = fileChooser.showOpenMultipleDialog(new Stage());
+         /*   List<File> list = fileChooser.showOpenMultipleDialog(new Stage());
             if (list != null) {
                 for (File file : list) {
                     Song song = new Song(file.toURI().toString(), file.getName(), "", "");
                     model.getAllSongs().add(song);
                 }
+            }*/
+            try{
+                switch (view.cb.getSelectionModel().getSelectedItem().toString()) {
+                    case "Binär":
+                        bs.openReadableSongs();
+                        Song b = bs.readSong();
+                        bs.closeReadable();
+                        System.out.println(b);
+                        //System.out.println(b);
+                        break;
+                    case "XML":
+                        break;
+                    case"C":
+                        break;
+                    case"D":
+                        break;
+                }
+            } catch (IOException e) {
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
-        } else if (event.getSource() == view.saveb) {
         } else if (event.getSource() == view.addAllb) {
             model.getPlaylist().addAll(model.getAllSongs());
         } else if (event.getSource() == view.next) {
             nextSong();
+        } else if (event.getSource() == view.saveb) {
+            try{
+                switch (view.cb.getSelectionModel().getSelectedItem().toString()) {
+                    case "Binär":
+                        bs.openWriteableSongs();
+                        bs.writeSong(s);
+                        bs.closeWriteable();
+                        break;
+                    case "XML":
+                        break;
+                    case"C":
+                        break;
+                    case"D":
+                        break;
+                }
+            } catch (IOException e) {
+
+            }
         }
     }
 }

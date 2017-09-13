@@ -1,18 +1,31 @@
 import javafx.beans.property.SimpleStringProperty;
 
-public class Song implements interfaces.Song {
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-    private SimpleStringProperty path = new SimpleStringProperty();
-    private SimpleStringProperty titel = new SimpleStringProperty();
-    private SimpleStringProperty album = new SimpleStringProperty();
-    private SimpleStringProperty interpret = new SimpleStringProperty();
-    private long id;
+public class Song implements interfaces.Song, Serializable {
+
+
+
+    private static final long serialVersionUID = 716389091202934571L;
+    private transient SimpleStringProperty path = new SimpleStringProperty();
+    private transient SimpleStringProperty titel = new SimpleStringProperty();
+    private transient SimpleStringProperty album = new SimpleStringProperty();
+    private transient SimpleStringProperty interpret = new SimpleStringProperty();
+    private  long id;
 
     public Song(String p,String t,String a,String i){
+        path = new SimpleStringProperty();
+        titel = new SimpleStringProperty();
+        album = new SimpleStringProperty();
+        interpret = new SimpleStringProperty();
         this.setPath(p);
         this.setTitle(t);
         this.setAlbum(a);
         this.setInterpret(i);
+        setId(IDGenerator.getNextID());
     }
     @Override
     public String getAlbum() {
@@ -61,7 +74,7 @@ public class Song implements interfaces.Song {
 
     @Override
     public void setId(long id) {
-        this.id=id;
+        this.id = id;
     }
 
     @Override
@@ -77,5 +90,30 @@ public class Song implements interfaces.Song {
     @Override
     public SimpleStringProperty interpretProperty() {
         return interpret;
+    }
+
+    @Override
+    public String toString() {
+        return "Titel: " + getTitle() + "\nInterpret: " + getInterpret() + "\nAlbum: " + getAlbum() + "\nPath: " + getPath();
+    }
+
+    private void writeObject(ObjectOutputStream o) throws IOException {
+        o.defaultWriteObject();
+        o.writeObject(getPath());
+        o.writeObject(getTitle());
+        o.writeObject(getAlbum());
+        o.writeObject(getInterpret());
+    }
+
+    private void readObject(ObjectInputStream o) throws IOException, ClassNotFoundException {
+        o.defaultReadObject();
+        path = new SimpleStringProperty();
+        setPath((String) o.readObject());
+        titel = new SimpleStringProperty();
+        setTitle((String) o.readObject());
+        album = new SimpleStringProperty();
+        setAlbum((String) o.readObject());
+        interpret = new SimpleStringProperty();
+        setInterpret((String) o.readObject());
     }
 }

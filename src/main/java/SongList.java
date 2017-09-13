@@ -1,9 +1,14 @@
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import interfaces.Song;
 import javafx.collections.ModifiableObservableListBase;
 
-public class SongList extends ModifiableObservableListBase<Song> implements interfaces.SongList {
+public class SongList extends ModifiableObservableListBase<Song> implements interfaces.SongList, Serializable {
+
+    private static final long serialVersionUID = 726389091202934571L;
+
 
     private ArrayList<Song> songList = new ArrayList<>();
 
@@ -101,5 +106,14 @@ public class SongList extends ModifiableObservableListBase<Song> implements inte
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    public Song findSongbyID(long id) {
+        for(Song song: songList) {
+            if(song.getId() == id) {
+                return song;
+            }
+        }
+        return null;
     }
 }
