@@ -1,4 +1,3 @@
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -10,9 +9,9 @@ public class SongList extends ModifiableObservableListBase<Song> implements inte
     private static final long serialVersionUID = 726389091202934571L;
 
 
-    private ArrayList<Song> songList = new ArrayList<>();
+    private ArrayList<interfaces.Song> songList = new ArrayList<>();
 
-
+    @Override
     public boolean addSong(interfaces.Song s) throws RemoteException {
         songList.add(s);
         return true;

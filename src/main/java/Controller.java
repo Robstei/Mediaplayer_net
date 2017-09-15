@@ -1,3 +1,5 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -8,8 +10,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -33,6 +34,8 @@ public class Controller implements EventHandler<ActionEvent> {
     //kann hier elegant mit Lambda-Ausdrüken gearbeitet werden.
 
     public void link(Model model, View view) throws RemoteException {
+
+        model.getAllSongs().getList();
 
         bs = new BinaryStrategy();
         s = new Song("AA","B","C","D");
@@ -160,27 +163,39 @@ public class Controller implements EventHandler<ActionEvent> {
         } else if (event.getSource() == view.pause) {
             mp.pause();
         } else if (event.getSource() == view.loadb) {
-         /*   List<File> list = fileChooser.showOpenMultipleDialog(new Stage());
-            if (list != null) {
-                for (File file : list) {
-                    Song song = new Song(file.toURI().toString(), file.getName(), "", "");
-                    model.getAllSongs().add(song);
-                }
-            }*/
             try{
                 switch (view.cb.getSelectionModel().getSelectedItem().toString()) {
+                    case "File":
+                        List<File> list = fileChooser.showOpenMultipleDialog(new Stage());
+                        if (list != null) {
+                            model.getAllSongs().deleteAllSongs();
+                            for (File file : list) {
+                                Song song = new Song(file.toURI().toString(), file.getName(), "", "");
+                                model.getAllSongs().add(song);
+                            }
+                        }
+                        break;
                     case "Binär":
                         bs.openReadableSongs();
-                        Song b = bs.readSong();
-                        bs.closeReadable();
-                        System.out.println(b);
-                        //System.out.println(b);
+                        Song song;
+                        try {
+                            while(true) {
+                            song = bs.readSong();
+                            System.out.println(song);
+                            System.out.println(model.getAllSongs().size());
+                            model.getAllSongs().add(song);
+                            }
+                        }
+                        catch (EOFException e) {
+                            bs.closeReadable();
+                        }
+                        view.songslv.setItems(model.getAllSongs());
                         break;
                     case "XML":
                         break;
-                    case"C":
+                    case "C":
                         break;
-                    case"D":
+                    case "D":
                         break;
                 }
             } catch (IOException e) {
@@ -197,7 +212,9 @@ public class Controller implements EventHandler<ActionEvent> {
                 switch (view.cb.getSelectionModel().getSelectedItem().toString()) {
                     case "Binär":
                         bs.openWriteableSongs();
-                        bs.writeSong(s);
+                        for(int i = 0; i < model.getAllSongs().sizeOfList(); i++) {
+                            bs.writeSong(model.getAllSongs().get(i));
+                        }
                         bs.closeWriteable();
                         break;
                     case "XML":
