@@ -101,7 +101,7 @@ public class View extends BorderPane {
         cb = new ComboBox();
         cb.setPrefWidth(200);
         ObservableList<String> serializingWays = FXCollections.observableArrayList(
-                "Binär", "File", "2", "3", "4" );
+                "Binär", "File", "XML", "3", "4" );
         cb.setItems(serializingWays);
         cb.getSelectionModel().selectFirst();
         top = new HBox();

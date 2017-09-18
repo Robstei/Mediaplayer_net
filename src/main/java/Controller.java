@@ -25,6 +25,8 @@ public class Controller implements EventHandler<ActionEvent> {
     private MediaPlayer mp;
     private FileChooser fileChooser;
     private BinaryStrategy bs;
+    private XMLStrategy xml;
+    int count;
 
 
     //Verbidung zwischen den Daten im Model und der Liste in der View.
@@ -38,6 +40,7 @@ public class Controller implements EventHandler<ActionEvent> {
         model.getAllSongs().getList();
 
         bs = new BinaryStrategy();
+        xml = new XMLStrategy();
         s = new Song("AA","B","C","D");
 
         fileChooser = new FileChooser();
@@ -164,34 +167,56 @@ public class Controller implements EventHandler<ActionEvent> {
             mp.pause();
         } else if (event.getSource() == view.loadb) {
             try{
+                Song song;
                 switch (view.cb.getSelectionModel().getSelectedItem().toString()) {
                     case "File":
                         List<File> list = fileChooser.showOpenMultipleDialog(new Stage());
                         if (list != null) {
                             model.getAllSongs().deleteAllSongs();
                             for (File file : list) {
-                                Song song = new Song(file.toURI().toString(), file.getName(), "", "");
+                                song = new Song(file.toURI().toString(), file.getName(), "", "");
                                 model.getAllSongs().add(song);
                             }
                         }
                         break;
                     case "Binär":
                         bs.openReadableSongs();
-                        Song song;
                         try {
                             while(true) {
                             song = bs.readSong();
-                            System.out.println(song);
-                            System.out.println(model.getAllSongs().size());
                             model.getAllSongs().add(song);
                             }
                         }
                         catch (EOFException e) {
                             bs.closeReadable();
                         }
-                        view.songslv.setItems(model.getAllSongs());
+                        bs.openReadablePlaylist();
+                        try {
+                            while(true) {
+                                song = bs.readSong();
+                                model.getPlaylist().add(song);
+                            }
+                        }
+                        catch (EOFException e) {
+                            bs.closeReadable();
+                        }
                         break;
                     case "XML":
+                        xml.openReadableSongs();
+                        count = xml.readCount();
+                        for (int i = 0; i<count;i++) {
+                            song = xml.readSong();
+                            model.getAllSongs().add(song);
+                        }
+                        xml.closeReadable();
+
+                        xml.openReadablePlaylist();
+                        count = xml.readCount();
+                        for (int i = 0; i<count;i++) {
+                            song = xml.readSong();
+                            model.getPlaylist().add(song);
+                        }
+                        xml.closeReadable();
                         break;
                     case "C":
                         break;
@@ -199,7 +224,8 @@ public class Controller implements EventHandler<ActionEvent> {
                         break;
                 }
             } catch (IOException e) {
-
+                System.out.println("IOException swtich");
+                e.printStackTrace(System.out);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -216,9 +242,28 @@ public class Controller implements EventHandler<ActionEvent> {
                             bs.writeSong(model.getAllSongs().get(i));
                         }
                         bs.closeWriteable();
+                        bs.openWriteablePlaylist();
+                        for(int i = 0; i < model.getPlaylist().sizeOfList(); i++) {
+                            bs.writeSong(model.getPlaylist().get(i));
+                        }
+                        bs.closeWriteable();
                         break;
+
                     case "XML":
+                        xml.openWriteableSongs();
+                        xml.writeCount(model.getAllSongs().sizeOfList());
+                        for(int i = 0; i < model.getAllSongs().sizeOfList(); i++) {
+                            xml.writeSong(model.getAllSongs().get(i));
+                        }
+                        xml.closeWriteable();
+                        xml.openWriteablePlaylist();
+                        xml.writeCount(model.getPlaylist().sizeOfList());
+                        for(int i = 0; i < model.getPlaylist().sizeOfList(); i++) {
+                            xml.writeSong(model.getPlaylist().get(i));
+                        }
+                        xml.closeWriteable();
                         break;
+
                     case"C":
                         break;
                     case"D":

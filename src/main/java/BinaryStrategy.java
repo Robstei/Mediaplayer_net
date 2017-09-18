@@ -4,11 +4,11 @@ import java.io.*;
 
 public class BinaryStrategy implements SerializableStrategy {
 
-    private Song s = null;
     private FileInputStream fis;
     private FileOutputStream fos;
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
+
 
     @Override
     public void openWriteableSongs() throws IOException {
@@ -43,6 +43,7 @@ public class BinaryStrategy implements SerializableStrategy {
     public Song readSong() throws IOException, ClassNotFoundException {
         return (Song) ois.readObject();
     }
+
 
     @Override
     public void closeReadable() {

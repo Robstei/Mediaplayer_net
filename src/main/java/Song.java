@@ -1,5 +1,4 @@
 import javafx.beans.property.SimpleStringProperty;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -16,6 +15,8 @@ public class Song implements interfaces.Song, Serializable {
     private transient SimpleStringProperty interpret = new SimpleStringProperty();
     private  long id;
 
+    public Song() {};
+
     public Song(String p,String t,String a,String i){
         path = new SimpleStringProperty();
         titel = new SimpleStringProperty();
@@ -27,6 +28,8 @@ public class Song implements interfaces.Song, Serializable {
         this.setInterpret(i);
         setId(IDGenerator.getNextID());
     }
+
+
     @Override
     public String getAlbum() {
         return  album.get();
