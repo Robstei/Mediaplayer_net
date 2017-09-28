@@ -1,23 +1,24 @@
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.media.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.io.*;
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
 
-
 public class Controller implements EventHandler<ActionEvent> {
 
-    Song s;
+    private int count;
+    private int count2;
+    private Song s;
     private Model model;
     private View view;
     private String time;
@@ -26,8 +27,8 @@ public class Controller implements EventHandler<ActionEvent> {
     private FileChooser fileChooser;
     private BinaryStrategy bs;
     private XMLStrategy xml;
-    int count;
-
+    private JDBCStrategy jdb;
+    private OpenJPAStrategy ojpa;
 
     //Verbidung zwischen den Daten im Model und der Liste in der View.
     //Die Liste wird automatisch über Änderungen informiert und aktualisiert sich.
@@ -41,7 +42,9 @@ public class Controller implements EventHandler<ActionEvent> {
 
         bs = new BinaryStrategy();
         xml = new XMLStrategy();
-        s = new Song("AA","B","C","D");
+        jdb = new JDBCStrategy();
+        ojpa = new OpenJPAStrategy();
+        s = new Song("AA", "B", "C", "D");
 
         fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(
@@ -93,11 +96,8 @@ public class Controller implements EventHandler<ActionEvent> {
                 return cell;
             }
         };
-
-
         view.songslv.setItems(model.getAllSongs());
         view.songslv.setCellFactory(c);
-
 
         Callback<ListView<interfaces.Song>, ListCell<interfaces.Song>> plcallback = new Callback<ListView<interfaces.Song>, ListCell<interfaces.Song>>() {
             @Override
@@ -148,13 +148,17 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
     @Override
-    public void handle(ActionEvent event)  {
+    public void handle(ActionEvent event) {
+
+        // Add Playlist
         if (event.getSource() == view.add_playlist && model.getAllSongs().size() > 0) {
             if (view.songslv.getSelectionModel().getSelectedItem() != null) {
                 model.getPlaylist().add(view.songslv.getSelectionModel().getSelectedItem());
             } else if (view.songslv.getItems().get(0) != null) {
                 model.getPlaylist().add(model.getAllSongs().get(0));
             }
+
+            //Play
         } else if (event.getSource() == view.play) {
             if (view.playlistlv.getItems().get(0) != null) {
                 if (mp == null) {
@@ -163,10 +167,22 @@ public class Controller implements EventHandler<ActionEvent> {
                     mp.play();
                 }
             }
+
+            //Pause
         } else if (event.getSource() == view.pause) {
             mp.pause();
+
+            //Add All
+        } else if (event.getSource() == view.addAllb) {
+            model.getPlaylist().addAll(model.getAllSongs());
+
+            //Next
+        } else if (event.getSource() == view.next) {
+            nextSong();
+
+            //Load
         } else if (event.getSource() == view.loadb) {
-            try{
+            try {
                 Song song;
                 switch (view.cb.getSelectionModel().getSelectedItem().toString()) {
                     case "File":
@@ -182,29 +198,27 @@ public class Controller implements EventHandler<ActionEvent> {
                     case "Binär":
                         bs.openReadableSongs();
                         try {
-                            while(true) {
-                            song = bs.readSong();
-                            model.getAllSongs().add(song);
+                            while (true) {
+                                song = bs.readSong();
+                                model.getAllSongs().add(song);
                             }
-                        }
-                        catch (EOFException e) {
+                        } catch (EOFException e) {
                             bs.closeReadable();
                         }
                         bs.openReadablePlaylist();
                         try {
-                            while(true) {
+                            while (true) {
                                 song = bs.readSong();
                                 model.getPlaylist().add(song);
                             }
-                        }
-                        catch (EOFException e) {
+                        } catch (EOFException e) {
                             bs.closeReadable();
                         }
                         break;
                     case "XML":
                         xml.openReadableSongs();
                         count = xml.readCount();
-                        for (int i = 0; i<count;i++) {
+                        for (int i = 0; i < count; i++) {
                             song = xml.readSong();
                             model.getAllSongs().add(song);
                         }
@@ -212,15 +226,37 @@ public class Controller implements EventHandler<ActionEvent> {
 
                         xml.openReadablePlaylist();
                         count = xml.readCount();
-                        for (int i = 0; i<count;i++) {
+                        for (int i = 0; i < count; i++) {
                             song = xml.readSong();
                             model.getPlaylist().add(song);
                         }
                         xml.closeReadable();
                         break;
-                    case "C":
+                    case "SQL":
+                        count = jdb.songsCount();
+                        count2 = jdb.playlistCount();
+                        jdb.openReadableSongs();
+                        for (int i = 0; i < count; i++) {
+                            model.getAllSongs().add(jdb.readSong());
+                        }
+                        jdb.openReadablePlaylist();
+                        for (int i = 0; i < count2; i++) {
+                            model.getPlaylist().add(jdb.readSong());
+                        }
                         break;
-                    case "D":
+                    case "OpenJPA":
+                        ojpa.openReadableSongs();
+                        try {
+                            while ((s = ojpa.readSong()) != null) {
+                                model.getAllSongs().add(s);
+                            }
+                        } catch (NullPointerException n) {
+                            ojpa.closeReadable();
+                        }
+                        //TODO Serializing Playlist via OpenJPA
+                        break;
+                    case "OpenJPAwithout":
+                        //TODO Serialinzing libary and playlist without persistence.xml
                         break;
                 }
             } catch (IOException e) {
@@ -229,21 +265,19 @@ public class Controller implements EventHandler<ActionEvent> {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-        } else if (event.getSource() == view.addAllb) {
-            model.getPlaylist().addAll(model.getAllSongs());
-        } else if (event.getSource() == view.next) {
-            nextSong();
+
+            //Save
         } else if (event.getSource() == view.saveb) {
-            try{
+            try {
                 switch (view.cb.getSelectionModel().getSelectedItem().toString()) {
                     case "Binär":
                         bs.openWriteableSongs();
-                        for(int i = 0; i < model.getAllSongs().sizeOfList(); i++) {
+                        for (int i = 0; i < model.getAllSongs().sizeOfList(); i++) {
                             bs.writeSong(model.getAllSongs().get(i));
                         }
                         bs.closeWriteable();
                         bs.openWriteablePlaylist();
-                        for(int i = 0; i < model.getPlaylist().sizeOfList(); i++) {
+                        for (int i = 0; i < model.getPlaylist().sizeOfList(); i++) {
                             bs.writeSong(model.getPlaylist().get(i));
                         }
                         bs.closeWriteable();
@@ -252,25 +286,40 @@ public class Controller implements EventHandler<ActionEvent> {
                     case "XML":
                         xml.openWriteableSongs();
                         xml.writeCount(model.getAllSongs().sizeOfList());
-                        for(int i = 0; i < model.getAllSongs().sizeOfList(); i++) {
+                        for (int i = 0; i < model.getAllSongs().sizeOfList(); i++) {
                             xml.writeSong(model.getAllSongs().get(i));
                         }
                         xml.closeWriteable();
                         xml.openWriteablePlaylist();
                         xml.writeCount(model.getPlaylist().sizeOfList());
-                        for(int i = 0; i < model.getPlaylist().sizeOfList(); i++) {
+                        for (int i = 0; i < model.getPlaylist().sizeOfList(); i++) {
                             xml.writeSong(model.getPlaylist().get(i));
                         }
                         xml.closeWriteable();
                         break;
+                    case "SQL":
+                        jdb.openWriteableSongs();
 
-                    case"C":
+                        for (interfaces.Song s : model.getAllSongs()) {
+                            jdb.writeSong(s);
+                        }
+                        jdb.openWriteablePlaylist();
+                        for (interfaces.Song s : model.getPlaylist()) {
+                            jdb.writeSong(s);
+                        }
                         break;
-                    case"D":
+                    case "OpenJPA":
+                        ojpa.openWriteableSongs();
+                        for (interfaces.Song s : model.getAllSongs()) {
+                            ojpa.writeSong(s);
+                        }
+                        ojpa.closeWriteable();
+                        break;
+                    case "OpenJPAwithout":
                         break;
                 }
             } catch (IOException e) {
-
+                e.printStackTrace();
             }
         }
     }

@@ -1,23 +1,43 @@
 import javafx.beans.property.SimpleStringProperty;
+import org.apache.openjpa.persistence.Persistent;
+import org.apache.openjpa.persistence.jdbc.Strategy;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+@Entity
+@Table(name = "Songs")
 public class Song implements interfaces.Song, Serializable {
 
-
-
     private static final long serialVersionUID = 716389091202934571L;
-    private transient SimpleStringProperty path = new SimpleStringProperty();
-    private transient SimpleStringProperty titel = new SimpleStringProperty();
-    private transient SimpleStringProperty album = new SimpleStringProperty();
-    private transient SimpleStringProperty interpret = new SimpleStringProperty();
-    private  long id;
 
-    public Song() {};
+    @Persistent
+    @Strategy("StringPropertyValueHandler")
+    private SimpleStringProperty path = new SimpleStringProperty();
 
-    public Song(String p,String t,String a,String i){
+    @Persistent
+    @Strategy("StringPropertyValueHandler")
+    private SimpleStringProperty titel = new SimpleStringProperty();
+
+    @Persistent
+    @Strategy("StringPropertyValueHandler")
+    private SimpleStringProperty album = new SimpleStringProperty();
+
+    @Persistent
+    @Strategy("StringPropertyValueHandler")
+    private SimpleStringProperty interpret = new SimpleStringProperty();
+    @Id
+    private long id;
+
+    public Song() {
+    }
+
+    public Song(String p, String t, String a, String i) {
         path = new SimpleStringProperty();
         titel = new SimpleStringProperty();
         album = new SimpleStringProperty();
@@ -29,10 +49,9 @@ public class Song implements interfaces.Song, Serializable {
         setId(IDGenerator.getNextID());
     }
 
-
     @Override
     public String getAlbum() {
-        return  album.get();
+        return album.get();
     }
 
     @Override

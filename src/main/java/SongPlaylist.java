@@ -11,12 +11,11 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "Songs")
-public class Song implements interfaces.Song, Serializable {
+@Table(name = "Playlist")
+public class SongPlaylist implements interfaces.Song, Serializable {
 
 
-
-    private static final long serialVersionUID = 716389091202934571L;
+    private static final long serialVersionUID = 916389091202934571L;
 
     @Persistent
     @Strategy("StringPropertyValueHandler")
@@ -25,7 +24,7 @@ public class Song implements interfaces.Song, Serializable {
     @Persistent
     @Strategy("StringPropertyValueHandler")
     private SimpleStringProperty titel = new SimpleStringProperty();
-    
+
     @Persistent
     @Strategy("StringPropertyValueHandler")
     private SimpleStringProperty album = new SimpleStringProperty();
@@ -34,11 +33,12 @@ public class Song implements interfaces.Song, Serializable {
     @Strategy("StringPropertyValueHandler")
     private SimpleStringProperty interpret = new SimpleStringProperty();
     @Id
-    private  long id;
+    private long id;
 
-    public Song() {};
+    public SongPlaylist() {
+    }
 
-    public Song(String p,String t,String a,String i){
+    public SongPlaylist(String p, String t, String a, String i) {
         path = new SimpleStringProperty();
         titel = new SimpleStringProperty();
         album = new SimpleStringProperty();
@@ -50,10 +50,9 @@ public class Song implements interfaces.Song, Serializable {
         setId(IDGenerator.getNextID());
     }
 
-
     @Override
     public String getAlbum() {
-        return  album.get();
+        return album.get();
     }
 
     @Override

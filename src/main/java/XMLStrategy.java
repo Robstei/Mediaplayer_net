@@ -1,5 +1,5 @@
-
-import java.beans.*;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -79,7 +79,7 @@ public class XMLStrategy implements interfaces.SerializableStrategy {
         enc.writeObject(count);
     }
 
-    public int readCount(){
+    public int readCount() {
         return (int) dec.readObject();
     }
 

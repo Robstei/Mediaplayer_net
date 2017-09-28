@@ -1,8 +1,9 @@
+import interfaces.Song;
+import javafx.collections.ModifiableObservableListBase;
+
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import interfaces.Song;
-import javafx.collections.ModifiableObservableListBase;
 
 public class SongList extends ModifiableObservableListBase<Song> implements interfaces.SongList, Serializable {
 
@@ -24,13 +25,13 @@ public class SongList extends ModifiableObservableListBase<Song> implements inte
     }
 
     @Override
-    public void setList(ArrayList<interfaces.Song> s) throws RemoteException {
-        this.songList = s;
+    public ArrayList<interfaces.Song> getList() throws RemoteException {
+        return songList;
     }
 
     @Override
-    public ArrayList<interfaces.Song> getList() throws RemoteException {
-        return songList;
+    public void setList(ArrayList<interfaces.Song> s) throws RemoteException {
+        this.songList = s;
     }
 
     @Override
@@ -45,8 +46,8 @@ public class SongList extends ModifiableObservableListBase<Song> implements inte
 
     @Override
     public Song findSongByPath(String name) throws RemoteException {
-        for(int i = 0; i < sizeOfList(); i++){
-            if(getList().get(i).getPath().equals(name)){
+        for (int i = 0; i < sizeOfList(); i++) {
+            if (getList().get(i).getPath().equals(name)) {
                 return getList().get(i);
             }
         }
@@ -108,8 +109,8 @@ public class SongList extends ModifiableObservableListBase<Song> implements inte
     }
 
     public Song findSongbyID(long id) {
-        for(Song song: songList) {
-            if(song.getId() == id) {
+        for (Song song : songList) {
+            if (song.getId() == id) {
                 return song;
             }
         }

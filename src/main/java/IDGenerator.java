@@ -7,8 +7,8 @@ public class IDGenerator {
     public static long getNextID() {
         if (id.get() >= -1 && id.get() < 9999) {
             return id.getAndIncrement();
-        }  else{
-            throw  new IDOverFlowExeption();
+        } else {
+            throw new IDOverFlowExeption();
         }
     }
 }

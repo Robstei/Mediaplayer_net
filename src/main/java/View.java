@@ -1,23 +1,12 @@
-import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 
 public class View extends BorderPane {
@@ -79,9 +68,7 @@ public class View extends BorderPane {
         right.setPadding(new Insets(3));
         right.getChildren().addAll(titell, titeltf, interpretl, interprettf, albuml, albumtf, right_middle, add_playlist);
 
-
         playlistlv = new ListView<>();
-
 
         center = new VBox();
         center.setPadding(new Insets(3));
@@ -101,7 +88,7 @@ public class View extends BorderPane {
         cb = new ComboBox();
         cb.setPrefWidth(200);
         ObservableList<String> serializingWays = FXCollections.observableArrayList(
-                "Binär", "File", "XML", "3", "4" );
+                "Binär", "File", "XML", "SQL", "OpenJPA", "OpenJPAwithout");
         cb.setItems(serializingWays);
         cb.getSelectionModel().selectFirst();
         top = new HBox();

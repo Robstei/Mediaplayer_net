@@ -9,7 +9,6 @@ public class BinaryStrategy implements SerializableStrategy {
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
 
-
     @Override
     public void openWriteableSongs() throws IOException {
         fos = new FileOutputStream("SongsLibary");
@@ -43,7 +42,6 @@ public class BinaryStrategy implements SerializableStrategy {
     public Song readSong() throws IOException, ClassNotFoundException {
         return (Song) ois.readObject();
     }
-
 
     @Override
     public void closeReadable() {

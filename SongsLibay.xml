@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_144" class="java.beans.XMLDecoder">
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>3</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/GB%20-%2010sec.mp3</string>
+        </void>
+        <void property="title">
+            <string>GB - 10sec.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>4</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/K.I.Z%20-%20Walpurgisnacht.mp3</string>
+        </void>
+        <void property="title">
+            <string>K.I.Z - Walpurgisnacht.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>5</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/Urban%20-%20Kopie.mp3</string>
+        </void>
+        <void property="title">
+            <string>Urban - Kopie.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>6</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/Urban.mp3</string>
+        </void>
+        <void property="title">
+            <string>Urban.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>3</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/GB%20-%2010sec.mp3</string>
+        </void>
+        <void property="title">
+            <string>GB - 10sec.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>4</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/K.I.Z%20-%20Walpurgisnacht.mp3</string>
+        </void>
+        <void property="title">
+            <string>K.I.Z - Walpurgisnacht.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>5</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/Urban%20-%20Kopie.mp3</string>
+        </void>
+        <void property="title">
+            <string>Urban - Kopie.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>6</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/Urban.mp3</string>
+        </void>
+        <void property="title">
+            <string>Urban.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>3</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/GB%20-%2010sec.mp3</string>
+        </void>
+        <void property="title">
+            <string>GB - 10sec.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>4</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/K.I.Z%20-%20Walpurgisnacht.mp3</string>
+        </void>
+        <void property="title">
+            <string>K.I.Z - Walpurgisnacht.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>5</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/Urban%20-%20Kopie.mp3</string>
+        </void>
+        <void property="title">
+            <string>Urban - Kopie.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>6</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/Urban.mp3</string>
+        </void>
+        <void property="title">
+            <string>Urban.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>3</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/GB%20-%2010sec.mp3</string>
+        </void>
+        <void property="title">
+            <string>GB - 10sec.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>4</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/K.I.Z%20-%20Walpurgisnacht.mp3</string>
+        </void>
+        <void property="title">
+            <string>K.I.Z - Walpurgisnacht.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>5</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/Urban%20-%20Kopie.mp3</string>
+        </void>
+        <void property="title">
+            <string>Urban - Kopie.mp3</string>
+        </void>
+    </object>
+    <object class="Song">
+        <void property="album">
+            <string></string>
+        </void>
+        <void property="id">
+            <long>6</long>
+        </void>
+        <void property="interpret">
+            <string></string>
+        </void>
+        <void property="path">
+            <string>file:/C:/Users/Robin/Downloads/Urban.mp3</string>
+        </void>
+        <void property="title">
+            <string>Urban.mp3</string>
+        </void>
+    </object>
+</java>

@@ -1,2 +1,2 @@
-public class IDOverFlowExeption extends RuntimeException{
+public class IDOverFlowExeption extends RuntimeException {
 }

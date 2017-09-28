@@ -1,5 +1,4 @@
 import javafx.beans.property.SimpleStringProperty;
-
 import org.apache.openjpa.meta.JavaTypes;
 
 public class StringPropertyValueHandler extends AbstractPropertyValueHandler {
@@ -15,5 +14,4 @@ public class StringPropertyValueHandler extends AbstractPropertyValueHandler {
     int getDatabaseColumnType() {
         return JavaTypes.STRING;
     }
-
 }

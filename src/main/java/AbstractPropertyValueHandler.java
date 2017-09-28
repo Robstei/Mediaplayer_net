@@ -1,5 +1,4 @@
 import javafx.beans.value.WritableValue;
-
 import org.apache.openjpa.jdbc.identifier.DBIdentifier;
 import org.apache.openjpa.jdbc.kernel.JDBCStore;
 import org.apache.openjpa.jdbc.meta.ValueMapping;
@@ -31,7 +30,6 @@ public abstract class AbstractPropertyValueHandler extends AbstractValueHandler 
     abstract int getDatabaseColumnType();
 
 
-
     @Override
     public Column[] map(ValueMapping vm, String name, ColumnIO io, boolean adapt) {
         DBDictionary dict = vm.getMappingRepository().getDBDictionary();
@@ -41,7 +39,7 @@ public abstract class AbstractPropertyValueHandler extends AbstractValueHandler 
         Column col = new Column();
         col.setIdentifier(colName);
         col.setJavaType(getDatabaseColumnType());
-        return new Column[] { col };
+        return new Column[]{col};
     }
 
 }
