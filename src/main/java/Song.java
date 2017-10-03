@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 @Entity
 @Table(name = "Songs")
-public class Song implements interfaces.Song, Serializable {
+public class Song extends UnicastRemoteObject implements interfaces.Song, Serializable {
 
     private static final long serialVersionUID = 716389091202934571L;
 
@@ -34,10 +36,12 @@ public class Song implements interfaces.Song, Serializable {
     @Id
     private long id;
 
-    public Song() {
+    public Song() throws RemoteException {
+        super();
     }
 
-    public Song(String p, String t, String a, String i) {
+    public Song(String p, String t, String a, String i) throws RemoteException {
+        super();
         path = new SimpleStringProperty();
         titel = new SimpleStringProperty();
         album = new SimpleStringProperty();
@@ -115,7 +119,7 @@ public class Song implements interfaces.Song, Serializable {
     }
 
     @Override
-    public String toString() {
+    public String toString()  {
         return "Titel: " + getTitle() + "\nInterpret: " + getInterpret() + "\nAlbum: " + getAlbum() + "\nPath: " + getPath();
     }
 

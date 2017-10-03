@@ -29,5 +29,4 @@ public interface Song {
 
     ObservableValue<String> interpretProperty();
 
-    String toString();
 }

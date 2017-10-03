@@ -11,10 +11,12 @@ import javafx.util.Callback;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class Controller implements EventHandler<ActionEvent> {
+public class Controller extends UnicastRemoteObject implements EventHandler<ActionEvent>, ControllerInterface {
 
     private int count;
     private int count2;
@@ -30,13 +32,17 @@ public class Controller implements EventHandler<ActionEvent> {
     private JDBCStrategy jdb;
     private OpenJPAStrategy ojpa;
 
+    protected Controller() throws RemoteException {
+    }
+
+
     //Verbidung zwischen den Daten im Model und der Liste in der View.
     //Die Liste wird automatisch über Änderungen informiert und aktualisiert sich.
     //Seit Java 1.8 können Lambda-Ausdrücke verwendet werden.
     //Da EventHandler ein funktionales Interface ist (besitzt nur eine Methodensignatur),
     //kann hier elegant mit Lambda-Ausdrüken gearbeitet werden.
 
-    public void link(Model model, View view) throws RemoteException {
+    public void link(Model model, View view) {
 
         model.getAllSongs().getList();
 
@@ -44,7 +50,6 @@ public class Controller implements EventHandler<ActionEvent> {
         xml = new XMLStrategy();
         jdb = new JDBCStrategy();
         ojpa = new OpenJPAStrategy();
-        s = new Song("AA", "B", "C", "D");
 
         fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter(
@@ -134,18 +139,37 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
     private void nextSong() {
-        try {
-            for (int i = 0; i < model.getPlaylist().sizeOfList() - 1; i++) {
-                if (model.getPlaylist().get(i).getPath().equals(music.getSource())) {
-                    mp.stop();
-                    makeMediaPlayer(view.playlistlv.getItems().get(i + 1).getPath());
-                    break;
-                }
+        for (int i = 0; i < model.getPlaylist().sizeOfList() - 1; i++) {
+            if (model.getPlaylist().get(i).getPath().equals(music.getSource())) {
+                mp.stop();
+                makeMediaPlayer(view.playlistlv.getItems().get(i + 1).getPath());
+                break;
             }
-        } catch (RemoteException e) {
-            e.printStackTrace();
         }
     }
+
+
+    @Override
+    public void play() {
+        if (view.playlistlv.getItems().get(0) != null) {
+            if (mp == null) {
+                makeMediaPlayer(view.playlistlv.getItems().get(0).getPath());
+            } else if (mp.getStatus() == MediaPlayer.Status.PAUSED) {
+                mp.play();
+            }
+        }
+    }
+
+    @Override
+    public void pause() {
+        mp.pause();
+    }
+
+    @Override
+    public void PlayNextSong() {
+
+    }
+
 
     @Override
     public void handle(ActionEvent event) {
@@ -160,18 +184,11 @@ public class Controller implements EventHandler<ActionEvent> {
 
             //Play
         } else if (event.getSource() == view.play) {
-            if (view.playlistlv.getItems().get(0) != null) {
-                if (mp == null) {
-                    makeMediaPlayer(view.playlistlv.getItems().get(0).getPath());
-                } else if (mp.getStatus() == MediaPlayer.Status.PAUSED) {
-                    mp.play();
-                }
-            }
+           play();
 
             //Pause
         } else if (event.getSource() == view.pause) {
-            mp.pause();
-
+            pause();
             //Add All
         } else if (event.getSource() == view.addAllb) {
             model.getPlaylist().addAll(model.getAllSongs());
@@ -191,6 +208,7 @@ public class Controller implements EventHandler<ActionEvent> {
                             model.getAllSongs().deleteAllSongs();
                             for (File file : list) {
                                 song = new Song(file.toURI().toString(), file.getName(), "", "");
+                                Naming.rebind("//127.0.0.1:1099/"+ song.getId(), song);
                                 model.getAllSongs().add(song);
                             }
                         }
@@ -220,7 +238,7 @@ public class Controller implements EventHandler<ActionEvent> {
                         count = xml.readCount();
                         for (int i = 0; i < count; i++) {
                             song = xml.readSong();
-                            model.getAllSongs().add(song);
+                            model.getAllSongs().add((interfaces.Song) song);
                         }
                         xml.closeReadable();
 
@@ -228,7 +246,7 @@ public class Controller implements EventHandler<ActionEvent> {
                         count = xml.readCount();
                         for (int i = 0; i < count; i++) {
                             song = xml.readSong();
-                            model.getPlaylist().add(song);
+                            model.getPlaylist().add((interfaces.Song) song);
                         }
                         xml.closeReadable();
                         break;

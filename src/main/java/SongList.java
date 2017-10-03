@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class SongList extends ModifiableObservableListBase<Song> implements interfaces.SongList, Serializable {
+public class SongList extends ModifiableObservableListBase<Song> implements interfaces.SongList {
 
     private static final long serialVersionUID = 726389091202934571L;
 
@@ -13,39 +13,39 @@ public class SongList extends ModifiableObservableListBase<Song> implements inte
     private ArrayList<interfaces.Song> songList = new ArrayList<>();
 
     @Override
-    public boolean addSong(interfaces.Song s) throws RemoteException {
+    public boolean addSong(interfaces.Song s) {
         songList.add(s);
         return true;
     }
 
     @Override
-    public boolean deleteSong(interfaces.Song s) throws RemoteException {
+    public boolean deleteSong(interfaces.Song s) {
         songList.remove(s.getId());
         return true;
     }
 
     @Override
-    public ArrayList<interfaces.Song> getList() throws RemoteException {
+    public ArrayList<interfaces.Song> getList() {
         return songList;
     }
 
     @Override
-    public void setList(ArrayList<interfaces.Song> s) throws RemoteException {
+    public void setList(ArrayList<interfaces.Song> s) {
         this.songList = s;
     }
 
     @Override
-    public void deleteAllSongs() throws RemoteException {
+    public void deleteAllSongs() {
         songList = new ArrayList<>();
     }
 
     @Override
-    public int sizeOfList() throws RemoteException {
+    public int sizeOfList() {
         return getList().size();
     }
 
     @Override
-    public Song findSongByPath(String name) throws RemoteException {
+    public Song findSongByPath(String name) {
         for (int i = 0; i < sizeOfList(); i++) {
             if (getList().get(i).getPath().equals(name)) {
                 return getList().get(i);
@@ -61,51 +61,24 @@ public class SongList extends ModifiableObservableListBase<Song> implements inte
 
     @Override
     public int size() {
-        try {
-            return getList().size();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return 0;
+        return getList().size();
     }
 
     @Override
     protected Song doRemove(int index) {
-        try {
-            getList().remove(index);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        try {
-            return getList().get(index);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
+        getList().remove(index);
+        return getList().get(index);
     }
 
     @Override
     protected Song doSet(int index, Song element) {
-        try {
-            getList().set(index, element);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        try {
-            return getList().get(index);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return null;
+        getList().set(index, element);
+        return getList().get(index);
     }
 
     @Override
     protected void doAdd(int index, Song element) {
-        try {
-            getList().add(index, element);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        getList().add(index, element);
     }
 
     public Song findSongbyID(long id) {
