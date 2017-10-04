@@ -84,7 +84,7 @@ public class View extends BorderPane {
 
         loadb = new Button("Load");
         saveb = new Button("Save");
-        timel = new Label("0:00");
+        timel = new Label("00:00");
         cb = new ComboBox();
         cb.setPrefWidth(200);
         ObservableList<String> serializingWays = FXCollections.observableArrayList(
