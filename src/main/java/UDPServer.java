@@ -19,7 +19,7 @@ public class UDPServer extends Thread{
             while (true) {
                 DatagramPacket packet = new DatagramPacket(new byte[14], 14);
                 socket.receive(packet);
-                new UDPServerThread(packet, socket, view).start();
+                new UDPClientThread(packet, socket, view).start();
             }
         } catch (IOException e) {
             e.printStackTrace();

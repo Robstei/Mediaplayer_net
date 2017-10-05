@@ -4,13 +4,13 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Scanner;
 
-public class UDPServerThread extends Thread {
+public class UDPClientThread extends Thread {
 
     View view;
     private DatagramPacket packet;
     private DatagramSocket socket;
 
-    public UDPServerThread(DatagramPacket packet, DatagramSocket socket, View view) {
+    public UDPClientThread(DatagramPacket packet, DatagramSocket socket, View view) {
         this.packet = packet;
         this.socket = socket;
         this.view = view;

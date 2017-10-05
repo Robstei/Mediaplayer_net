@@ -26,7 +26,7 @@ public class UDPClient extends Thread {
                 socket.receive(packet);
                 String answerString = new String(packet.getData());
                 Platform.runLater(() -> view.timel.setText(answerString));
-                Thread.sleep(100);
+                Thread.sleep(1000);
             }
         } catch (SocketException e) {
                 e.printStackTrace();
