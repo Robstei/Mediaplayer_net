@@ -6,8 +6,8 @@
     <persistence-unit name="openjpa">
         <description>JPA Application Client</description>
         <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-        <class>Song</class>
-        <class>SongPlaylist</class>
+        <class>modelview.Song</class>
+        <class>modelview.SongPlaylist</class>
         <properties>
             <property name="openjpa.ConnectionURL"
                       value="jdbc:sqlite:C:\Users\Robin\InteliJProjects\Mediaplayer_ser\SongsLibary.db"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <java version="1.8.0_144" class="java.beans.XMLDecoder">
  <int>3</int>
- <object class="Song">
+ <object class="modelview.Song">
   <void property="album">
    <string></string>
   </void>
@@ -18,7 +18,7 @@
    <string>GB - 10sec.mp3</string>
   </void>
  </object>
- <object class="Song">
+ <object class="modelview.Song">
   <void property="album">
    <string></string>
   </void>
@@ -35,7 +35,7 @@
    <string>K.I.Z - Walpurgisnacht.mp3</string>
   </void>
  </object>
- <object class="Song">
+ <object class="modelview.Song">
   <void property="album">
    <string></string>
   </void>
